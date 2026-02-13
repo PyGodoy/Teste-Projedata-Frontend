@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent,  } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import axios, { type AxiosResponse, type AxiosError } from "axios";
 
 interface Product {
@@ -26,64 +26,109 @@ function ProductRawMaterials() {
   const [rawMaterials, setRawMaterials] = useState<RawMaterial[]>([]);
   const [selectedProductId, setSelectedProductId] = useState<number | "">("");
   const [selectedRawMaterialId, setSelectedRawMaterialId] = useState<number | "">("");
-  const [quantityRequired, setQuantityRequired] = useState<number>(0);
+  const [quantityRequired, setQuantityRequired] = useState<string>("");
   const [editId, setEditId] = useState<number | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const API_URL = "http://localhost:8080/product-materials";
 
   // Buscar associações
-  const fetchAssociations = () => {
-    axios
-      .get<ProductRawMaterial[]>(API_URL)
-      .then((res: AxiosResponse<ProductRawMaterial[]>) => setAssociations(res.data))
-      .catch((err: AxiosError) => console.error(err));
+  const fetchAssociations = async () => {
+    setRefreshing(true);
+    setError("");
+    try {
+      const res: AxiosResponse<ProductRawMaterial[]> = await axios.get(API_URL);
+      setAssociations(res.data);
+    } catch (err: AxiosError | any) {
+      setError("Failed to fetch associations");
+      console.error(err);
+    } finally {
+      setRefreshing(false);
+    }
   };
 
-  // Buscar produtos e matérias-primas
-  const fetchProductsAndMaterials = () => {
-    axios
-      .get<Product[]>("http://localhost:8080/products")
-      .then((res: AxiosResponse<Product[]>) => setProducts(res.data))
-      .catch((err: AxiosError) => console.error(err));
+  // Buscar produtos
+  const fetchProducts = async () => {
+    try {
+      const res: AxiosResponse<Product[]> = await axios.get("http://localhost:8080/products");
+      setProducts(res.data);
+    } catch (err: AxiosError | any) {
+      console.error(err);
+    }
+  };
 
-    axios
-      .get<RawMaterial[]>("http://localhost:8080/raw-materials")
-      .then((res: AxiosResponse<RawMaterial[]>) => setRawMaterials(res.data))
-      .catch((err: AxiosError) => console.error(err));
+  // Buscar matérias-primas
+  const fetchRawMaterials = async () => {
+    try {
+      const res: AxiosResponse<RawMaterial[]> = await axios.get("http://localhost:8080/raw-materials");
+      setRawMaterials(res.data);
+    } catch (err: AxiosError | any) {
+      console.error(err);
+    }
+  };
+
+  // Buscar todos os dados
+  const fetchAllData = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      await Promise.all([
+        fetchAssociations(),
+        fetchProducts(),
+        fetchRawMaterials()
+      ]);
+    } catch (err) {
+      setError("Failed to fetch data");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    fetchProductsAndMaterials();
-    fetchAssociations();
+    fetchAllData();
   }, []);
 
   // Criar ou atualizar associação
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (selectedProductId === "" || selectedRawMaterialId === "" || quantityRequired <= 0) return;
+    
+    if (selectedProductId === "" || selectedRawMaterialId === "" || !quantityRequired) {
+      setError("Please fill all fields correctly");
+      return;
+    }
+
+    const quantity = parseInt(quantityRequired);
+    
+    if (isNaN(quantity) || quantity <= 0) {
+      setError("Quantity must be a positive number");
+      return;
+    }
 
     const payload = {
       productId: selectedProductId,
       rawMaterialId: selectedRawMaterialId,
-      quantityRequired,
+      quantityRequired: quantity,
     };
 
-    if (editId === null) {
-      axios
-        .post<ProductRawMaterial>(API_URL, payload)
-        .then(() => {
-          fetchAssociations();
-          resetForm();
-        })
-        .catch((err: AxiosError) => console.error(err));
-    } else {
-      axios
-        .put<ProductRawMaterial>(`${API_URL}/${editId}`, payload)
-        .then(() => {
-          fetchAssociations();
-          resetForm();
-        })
-        .catch((err: AxiosError) => console.error(err));
+    setLoading(true);
+    setError("");
+
+    try {
+      if (editId === null) {
+        await axios.post<ProductRawMaterial>(API_URL, payload);
+      } else {
+        await axios.put<ProductRawMaterial>(`${API_URL}/${editId}`, payload);
+      }
+      await fetchAssociations();
+      resetForm();
+    } catch (err: AxiosError | any) {
+      setError(`Failed to ${editId === null ? 'create' : 'update'} association`);
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -91,34 +136,67 @@ function ProductRawMaterials() {
   const handleEdit = (assoc: ProductRawMaterial) => {
     setSelectedProductId(assoc.product.id);
     setSelectedRawMaterialId(assoc.rawMaterial.id);
-    setQuantityRequired(assoc.quantityRequired);
+    setQuantityRequired(assoc.quantityRequired.toString());
     setEditId(assoc.id);
+    setError("");
   };
 
   // Deletar associação
-  const handleDelete = (id: number) => {
-    axios
-      .delete(`${API_URL}/${id}`)
-      .then(() => fetchAssociations())
-      .catch((err: AxiosError) => console.error(err));
+  const handleDelete = async (id: number) => {
+    if (!window.confirm("Are you sure you want to delete this association?")) return;
+    
+    setLoading(true);
+    setError("");
+    try {
+      await axios.delete(`${API_URL}/${id}`);
+      await fetchAssociations();
+    } catch (err: AxiosError | any) {
+      setError("Failed to delete association");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const resetForm = () => {
     setSelectedProductId("");
     setSelectedRawMaterialId("");
-    setQuantityRequired(0);
+    setQuantityRequired("");
     setEditId(null);
+    setError("");
+  };
+
+  // Refresh completo
+  const handleRefresh = () => {
+    fetchAllData();
   };
 
   return (
-    <div>
-      <h1>Associate Raw Materials to Products</h1>
+    <div className="component-card">
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        marginBottom: '20px'
+      }}>
+        <h1>Associate Raw Materials to Products</h1>
+        <button 
+          type="button" 
+          onClick={handleRefresh}
+          disabled={refreshing || loading}
+        >
+          {refreshing ? 'Refreshing...' : 'Refresh'}
+        </button>
+      </div>
+
+      {error && <p className="error">{error}</p>}
 
       <form onSubmit={handleSubmit}>
         <select
           value={selectedProductId}
           onChange={(e) => setSelectedProductId(Number(e.target.value))}
           required
+          disabled={loading}
         >
           <option value="">Select Product</option>
           {products.map((p) => (
@@ -132,6 +210,7 @@ function ProductRawMaterials() {
           value={selectedRawMaterialId}
           onChange={(e) => setSelectedRawMaterialId(Number(e.target.value))}
           required
+          disabled={loading}
         >
           <option value="">Select Raw Material</option>
           {rawMaterials.map((m) => (
@@ -143,26 +222,74 @@ function ProductRawMaterials() {
 
         <input
           type="number"
-          placeholder="Quantity Required"
+          placeholder="Quantity Required (ex: 5)"
           value={quantityRequired}
-          onChange={(e) => setQuantityRequired(Number(e.target.value))}
+          onChange={(e) => setQuantityRequired(e.target.value)}
           min={1}
           required
+          disabled={loading}
         />
 
-        <button type="submit">{editId === null ? "Add" : "Update"}</button>
-        {editId !== null && <button type="button" onClick={resetForm}>Cancel</button>}
+        <button type="submit" disabled={loading}>
+          {editId === null ? 'Add' : 'Update'}
+        </button>
+        
+        {editId !== null && (
+          <button type="button" onClick={resetForm} disabled={loading}>
+            Cancel
+          </button>
+        )}
       </form>
 
-      <ul>
-        {associations.map((a) => (
-          <li key={a.id}>
-            Product: {a.product.name} - Material: {a.rawMaterial.name} - Quantity: {a.quantityRequired}{" "}
-            <button onClick={() => handleEdit(a)}>Edit</button>{" "}
-            <button onClick={() => handleDelete(a.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+      {loading && !refreshing && <p>Loading...</p>}
+
+      <div 
+        className="table-container"
+        style={{
+          maxHeight: associations.length >= 3 ? '400px' : 'none',
+          overflowY: associations.length >= 3 ? 'auto' : 'visible',
+          border: associations.length >= 3 ? '1px solid #e1e4f0' : 'none',
+          borderRadius: '8px',
+          padding: associations.length >= 3 ? '0.5rem' : '0',
+          marginTop: '1rem'
+        }}
+      >
+        <ul style={{ 
+          margin: 0,
+          padding: 0,
+          listStyle: 'none'
+        }}>
+          {associations.length === 0 && !loading && !refreshing ? (
+            <li style={{ justifyContent: 'center' }}>No associations found. Create one above.</li>
+          ) : (
+            associations.map((a) => (
+              <li key={a.id}>
+                <span>
+                  <strong>Product:</strong> {a.product.name} |{' '}
+                  <strong>Material:</strong> {a.rawMaterial.name} |{' '}
+                  <strong>Quantity:</strong> {a.quantityRequired}
+                </span>
+                <div className="actions">
+                  <button 
+                    className="edit-btn" 
+                    onClick={() => handleEdit(a)}
+                    disabled={loading}
+                  >
+                    Edit
+                  </button>
+                  <button 
+                    className="delete-btn" 
+                    onClick={() => handleDelete(a.id)}
+                    disabled={loading}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </li>
+            ))
+          )}
+        </ul>
+      </div>
     </div>
   );
 }

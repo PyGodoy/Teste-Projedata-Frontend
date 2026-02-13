@@ -40,14 +40,21 @@ function Production() {
   }, []);
 
   return (
-    <div>
-      <h1>Production Suggestion</h1>
-      <button onClick={fetchProduction} style={{ marginBottom: "20px" }}>
-        Refresh Production
-      </button>
+    <div className="component-card">
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        marginBottom: '20px'
+      }}>
+        <h1>Production Suggestion</h1>
+        <button onClick={fetchProduction}>
+          Refresh Production
+        </button>
+      </div>
 
       {loading && <p>Loading...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error" style={{ color: 'rgb(255, 0, 0)' }}>{error}</p>}
 
       {!loading && !error && products.length === 0 && (
         <p>No products can be produced with current raw materials.</p>
@@ -55,39 +62,49 @@ function Production() {
 
       {!loading && !error && products.length > 0 && (
         <>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr>
-                <th style={{ borderBottom: "1px solid #ccc", padding: "8px" }}>
-                  Product
-                </th>
-                <th style={{ borderBottom: "1px solid #ccc", padding: "8px" }}>
-                  Quantity
-                </th>
-                <th style={{ borderBottom: "1px solid #ccc", padding: "8px" }}>
-                  Price per unit
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((p, index) => (
-                <tr key={index}>
-                  <td style={{ borderBottom: "1px solid #eee", padding: "8px" }}>
-                    {p.name}
-                  </td>
-                  <td style={{ borderBottom: "1px solid #eee", padding: "8px" }}>
-                    {p.quantity}
-                  </td>
-                  <td style={{ borderBottom: "1px solid #eee", padding: "8px" }}>
-                    ${p.price.toFixed(2)}
-                  </td>
+          <div 
+            className="table-container"
+            style={{
+              maxHeight: products.length >= 3 ? '300px' : 'none',
+              height: products.length >= 3 ? '300px' : 'auto',
+              overflowY: products.length >= 3 ? 'scroll' : 'visible',
+              border: products.length >= 3 ? '1px solid #e1e4f0' : 'none',
+              borderRadius: '8px',
+              marginBottom: '1.5rem'
+            }}
+          >
+            <table style={{ 
+              margin: 0,
+              width: '100%'
+            }}>
+              <thead style={products.length >= 3 ? { 
+                position: 'sticky', 
+                top: 0, 
+                background: '#f8f9fc', 
+                zIndex: 1,
+                boxShadow: '0 1px 0 #e1e4f0'
+              } : {}}>
+                <tr>
+                  <th>Product</th>
+                  <th>Quantity</th>
+                  <th>Price per unit</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <h2 style={{ marginTop: "20px" }}>
-            Total Value: ${totalValue.toFixed(2)}
-          </h2>
+              </thead>
+              <tbody>
+                {products.map((p, index) => (
+                  <tr key={index}>
+                    <td>{p.name}</td>
+                    <td>{p.quantity}</td>
+                    <td>${p.price.toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          
+          <div className="total-value">
+            <h2>Total Value: ${totalValue.toFixed(2)}</h2>
+          </div>
         </>
       )}
     </div>
