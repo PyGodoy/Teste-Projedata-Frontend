@@ -1,73 +1,150 @@
-# React + TypeScript + Vite
+# 📦 Sistema de Inventário - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sistema de gerenciamento de inventário desenvolvido em React + TypeScript + Vite, com testes unitários e E2E.
 
-Currently, two official plugins are available:
+## 🚀 Tecnologias
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React** 19.2.0
+- **TypeScript** 5.9.3
+- **Vite** 7.3.1
+- **Axios** 1.13.5
+- **Vitest** - Testes unitários
+- **Cypress** - Testes E2E
+- **Testing Library** - Utilitários de teste
 
-## React Compiler
+## 📋 Pré-requisitos
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js (versão 16 ou superior)
+- npm ou yarn
+- Backend da API rodando em `http://localhost:8080`
 
-## Expanding the ESLint configuration
+## 🔧 Instalação
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Clone o repositório:
+```bash
+git clone 
+cd Teste-Projedata-Frontend
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Instale as dependências:
+```bash
+npm install
 ```
+
+3. Instale o Cypress (se ainda não estiver instalado):
+```bash
+npm install --save-dev cypress
+```
+
+## 🏃 Executando o Projeto
+
+### Modo de Desenvolvimento
+
+Inicie o servidor de desenvolvimento:
+```bash
+npm run dev
+```
+
+O aplicativo estará disponível em: `http://localhost:5173`
+
+### Build de Produção
+
+Para criar uma build otimizada para produção:
+```bash
+npm run build
+```
+
+### Preview da Build
+
+Para visualizar a build de produção localmente:
+```bash
+npm run preview
+```
+
+## 🧪 Testes
+
+### Testes Unitários
+
+O projeto utiliza **Vitest** e **Testing Library** para testes unitários.
+
+#### Executar todos os testes unitários:
+```bash
+npm run test
+```
+
+#### Executar testes específicos:
+
+**Teste de Matérias-Primas:**
+```bash
+npm run test RawMaterials.test.tsx
+```
+
+**Teste de Produção:**
+```bash
+npm run test Production.test.tsx
+```
+
+**Teste de Produtos:**
+```bash
+npm run test Products.test.tsx
+```
+
+**Teste de Relação Produto-Matéria-Prima:**
+```bash
+npm run test ProductRawMaterials.test.tsx
+```
+
+### Testes E2E (Cypress)
+
+O projeto utiliza **Cypress** para testes end-to-end.
+
+#### Abrir interface do Cypress:
+```bash
+npm run cypress:open
+```
+
+Após abrir a interface, você pode executar os seguintes testes:
+
+- `Production.cy.js` - Testes do módulo de Produção
+- `ProductRawMaterials.cy.js` - Testes de Relação Produto-Matéria-Prima
+- `Products.cy.js` - Testes do módulo de Produtos
+- `RawMaterials.cy.js` - Testes do módulo de Matérias-Primas
+
+#### Executar testes Cypress em modo headless:
+```bash
+npm run cypress:run
+```
+
+## 🔗 Configuração da API
+
+O frontend se comunica com a API backend através do Axios. 
+
+**URL da API:** `http://localhost:8080`
+
+Certifique-se de que o backend está rodando antes de iniciar o frontend.
+
+## 🛠️ Scripts Disponíveis
+
+| Script | Descrição |
+|--------|-----------|
+| `npm run dev` | Inicia o servidor de desenvolvimento |
+| `npm run build` | Cria build de produção |
+| `npm run preview` | Visualiza build de produção |
+| `npm run lint` | Executa o linter ESLint |
+| `npm run test` | Executa todos os testes unitários |
+| `npm run cypress:open` | Abre interface do Cypress |
+| `npm run cypress:run` | Executa testes Cypress em modo headless |
+
+## ✅ Checklist de Desenvolvimento
+
+- [ ] Backend rodando em `localhost:8080`
+- [ ] Dependências instaladas (`npm install`)
+- [ ] Servidor de desenvolvimento iniciado (`npm run dev`)
+- [ ] Testes unitários passando (`npm run test`)
+- [ ] Testes E2E passando (`npm run cypress:run`)
+
+## 📝 Notas
+
+- Certifique-se de que a API backend está acessível antes de rodar o frontend
+- Os testes E2E podem falhar se a API não estiver respondendo corretamente
+- Para desenvolvimento, mantenha tanto o frontend quanto o backend rodando simultaneamente
