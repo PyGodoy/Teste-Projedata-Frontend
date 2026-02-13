@@ -4,7 +4,6 @@ import ProductRawMaterials from "./components/ProductRawMaterials";
 import Products from "./components/Products";
 import RawMaterials from "./components/RawMaterials";
 
-// Teste Finalizado
 function App() {
   return (
     <>
