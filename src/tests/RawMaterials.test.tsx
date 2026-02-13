@@ -299,7 +299,8 @@ describe("RawMaterials Component", () => {
       render(<RawMaterials />);
 
       await waitFor(() => {
-        expect(screen.getByText(/Quantity: 10/i)).toBeInTheDocument();
+        const stockElement = screen.getByTestId('raw-material-stock');
+        expect(stockElement).toHaveTextContent('10');
       });
     });
 
@@ -513,8 +514,10 @@ describe("RawMaterials Component", () => {
       await waitFor(() => {
         expect(screen.getByText(/CPU Intel i9/i)).toBeInTheDocument();
         expect(screen.getByText(/RAM DDR4 16GB/i)).toBeInTheDocument();
-        expect(screen.getByText(/Quantity: 10/i)).toBeInTheDocument();
-        expect(screen.getByText(/Quantity: 25/i)).toBeInTheDocument();
+        
+        const stockElements = screen.getAllByTestId('raw-material-stock');
+        expect(stockElements[0]).toHaveTextContent('10');
+        expect(stockElements[1]).toHaveTextContent('25');
       });
     });
   });

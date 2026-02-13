@@ -184,19 +184,21 @@ function ProductRawMaterials() {
           type="button" 
           onClick={handleRefresh}
           disabled={refreshing || loading}
+          data-cy="refresh-btn"
         >
           {refreshing ? 'Refreshing...' : 'Refresh'}
         </button>
       </div>
 
-      {error && <p className="error">{error}</p>}
+      {error && <p className="error" data-cy="error-message" style={{ color: 'rgb(255, 0, 0)' }}>{error}</p>}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} data-cy="association-form">
         <select
           value={selectedProductId}
           onChange={(e) => setSelectedProductId(Number(e.target.value))}
           required
           disabled={loading}
+          data-cy="product-select"
         >
           <option value="">Select Product</option>
           {products.map((p) => (
@@ -211,6 +213,7 @@ function ProductRawMaterials() {
           onChange={(e) => setSelectedRawMaterialId(Number(e.target.value))}
           required
           disabled={loading}
+          data-cy="raw-material-select"
         >
           <option value="">Select Raw Material</option>
           {rawMaterials.map((m) => (
@@ -228,23 +231,25 @@ function ProductRawMaterials() {
           min={1}
           required
           disabled={loading}
+          data-cy="quantity-input"
         />
 
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading} data-cy="submit-association-btn">
           {editId === null ? 'Add' : 'Update'}
         </button>
         
         {editId !== null && (
-          <button type="button" onClick={resetForm} disabled={loading}>
+          <button type="button" onClick={resetForm} disabled={loading} data-cy="cancel-btn">
             Cancel
           </button>
         )}
       </form>
 
-      {loading && !refreshing && <p>Loading...</p>}
+      {loading && !refreshing && <p data-cy="loading">Loading...</p>}
 
       <div 
         className="table-container"
+        data-cy="associations-list-container"
         style={{
           maxHeight: associations.length >= 3 ? '400px' : 'none',
           overflowY: associations.length >= 3 ? 'auto' : 'visible',
@@ -258,22 +263,25 @@ function ProductRawMaterials() {
           margin: 0,
           padding: 0,
           listStyle: 'none'
-        }}>
+        }}
+        data-cy="associations-list"
+        >
           {associations.length === 0 && !loading && !refreshing ? (
-            <li style={{ justifyContent: 'center' }}>No associations found. Create one above.</li>
+            <li style={{ justifyContent: 'center' }} data-cy="empty-state">No associations found. Create one above.</li>
           ) : (
             associations.map((a) => (
-              <li key={a.id}>
-                <span>
-                  <strong>Product:</strong> {a.product.name} |{' '}
-                  <strong>Material:</strong> {a.rawMaterial.name} |{' '}
-                  <strong>Quantity:</strong> {a.quantityRequired}
+              <li key={a.id} data-cy="association-row">
+                <span data-cy="association-details">
+                  <strong>Product:</strong> <span data-cy="association-product-name">{a.product.name}</span> |{' '}
+                  <strong>Material:</strong> <span data-cy="association-material-name">{a.rawMaterial.name}</span> |{' '}
+                  <strong>Quantity:</strong> <span data-cy="association-quantity">{a.quantityRequired}</span>
                 </span>
                 <div className="actions">
                   <button 
                     className="edit-btn" 
                     onClick={() => handleEdit(a)}
                     disabled={loading}
+                    data-cy="edit-association-btn"
                   >
                     Edit
                   </button>
@@ -281,6 +289,7 @@ function ProductRawMaterials() {
                     className="delete-btn" 
                     onClick={() => handleDelete(a.id)}
                     disabled={loading}
+                    data-cy="delete-association-btn"
                   >
                     Delete
                   </button>

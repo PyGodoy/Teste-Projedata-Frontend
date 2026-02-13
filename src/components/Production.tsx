@@ -40,7 +40,7 @@ function Production() {
   }, []);
 
   return (
-    <div className="component-card">
+    <div className="component-card" data-cy="production-container">
       <div style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
@@ -48,22 +48,23 @@ function Production() {
         marginBottom: '20px'
       }}>
         <h1>Production Suggestion</h1>
-        <button onClick={fetchProduction}>
+        <button onClick={fetchProduction} data-cy="refresh-btn">
           Refresh Production
         </button>
       </div>
 
-      {loading && <p>Loading...</p>}
-      {error && <p className="error" style={{ color: 'rgb(255, 0, 0)' }}>{error}</p>}
+      {loading && <p data-cy="loading">Loading...</p>}
+      {error && <p className="error" style={{ color: 'rgb(255, 0, 0)' }} data-cy="error-message">{error}</p>}
 
       {!loading && !error && products.length === 0 && (
-        <p>No products can be produced with current raw materials.</p>
+        <p data-cy="empty-state">No products can be produced with current raw materials.</p>
       )}
 
       {!loading && !error && products.length > 0 && (
         <>
           <div 
             className="table-container"
+            data-cy="production-table-container"
             style={{
               maxHeight: products.length >= 3 ? '300px' : 'none',
               height: products.length >= 3 ? '300px' : 'auto',
@@ -76,7 +77,9 @@ function Production() {
             <table style={{ 
               margin: 0,
               width: '100%'
-            }}>
+            }}
+            data-cy="production-table"
+            >
               <thead style={products.length >= 3 ? { 
                 position: 'sticky', 
                 top: 0, 
@@ -92,17 +95,17 @@ function Production() {
               </thead>
               <tbody>
                 {products.map((p, index) => (
-                  <tr key={index}>
-                    <td>{p.name}</td>
-                    <td>{p.quantity}</td>
-                    <td>${p.price.toFixed(2)}</td>
+                  <tr key={index} data-cy="production-row">
+                    <td data-cy="product-name">{p.name}</td>
+                    <td data-cy="product-quantity">{p.quantity}</td>
+                    <td data-cy="product-price">${p.price.toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
           
-          <div className="total-value">
+          <div className="total-value" data-cy="total-value">
             <h2>Total Value: ${totalValue.toFixed(2)}</h2>
           </div>
         </>

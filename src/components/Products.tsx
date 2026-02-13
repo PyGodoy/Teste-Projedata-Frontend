@@ -107,8 +107,9 @@ function Products() {
     <div className="component-card">
       <h1>Products</h1>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} data-cy="product-form">
         <input
+          data-cy="product-name-input"
           type="text"
           name="name"
           placeholder="Product Name"
@@ -117,6 +118,7 @@ function Products() {
           required
         />
         <input
+          data-cy="product-price-input"
           type="number"
           name="price"
           placeholder="Price (ex: 99.90)"
@@ -127,6 +129,7 @@ function Products() {
           required
         />
         <input
+          data-cy="product-quantity-input"
           type="number"
           name="quantity"
           placeholder="Quantity (ex: 10)"
@@ -135,10 +138,13 @@ function Products() {
           min="0"
           required
         />
-        <button type="submit">{form.id ? "Update" : "Add"}</button>
+        <button type="submit" data-cy="submit-product-btn">
+          {form.id ? "Update" : "Add"}
+        </button>
         {form.id && (
           <button 
             type="button" 
+            data-cy="cancel-btn"
             onClick={() => setForm({ name: "", price: "", quantity: "" })}
           >
             Cancel
@@ -146,12 +152,13 @@ function Products() {
         )}
       </form>
 
-      {loading && <p>Loading...</p>}
-      {error && <p className="error" style={{ color: 'rgb(255, 0, 0)' }}>{error}</p>}
+      {loading && <p data-cy="loading">Loading...</p>}
+      {error && <p className="error" data-cy="error-message" style={{ color: 'rgb(255, 0, 0)' }}>{error}</p>}
 
       <div 
         ref={tableContainerRef}
         className="table-container"
+        data-cy="products-table-container"
         style={{
           maxHeight: products.length >= 3 ? '400px' : 'none',
           overflowY: products.length >= 3 ? 'auto' : 'visible',
@@ -160,7 +167,7 @@ function Products() {
           transition: 'all 0.3s ease'
         }}
       >
-        <table>
+        <table data-cy="products-table">
           <thead style={products.length >= 3 ? { position: 'sticky', top: 0, background: '#f8f9fc', zIndex: 1 } : {}}>
             <tr>
               <th>ID</th>
@@ -171,20 +178,28 @@ function Products() {
             </tr>
           </thead>
           <tbody>
-            {products.map((p) => (
-              <tr key={p.id}>
-                <td>{p.id}</td>
-                <td>{p.name}</td>
-                <td>${p.price.toFixed(2)}</td>
-                <td>{p.quantity}</td>
-                <td>
-                  <div className="actions">
-                    <button className="edit-btn" onClick={() => handleEdit(p)}>Edit</button>
-                    <button className="delete-btn" onClick={() => handleDelete(p.id)}>Delete</button>
-                  </div>
+            {products.length === 0 && !loading ? (
+              <tr data-cy="empty-state">
+                <td colSpan={5} style={{ textAlign: 'center', color: '#64748b', fontStyle: 'italic' }}>
+                  No products found. Create one above.
                 </td>
               </tr>
-            ))}
+            ) : (
+              products.map((p) => (
+                <tr key={p.id} data-cy="product-row">
+                  <td>{p.id}</td>
+                  <td data-cy="product-name">{p.name}</td>
+                  <td data-cy="product-price">${p.price.toFixed(2)}</td>
+                  <td data-cy="product-quantity">{p.quantity}</td>
+                  <td>
+                    <div className="actions">
+                      <button className="edit-btn" data-cy="edit-product-btn" onClick={() => handleEdit(p)}>Edit</button>
+                      <button className="delete-btn" data-cy="delete-product-btn" onClick={() => handleDelete(p.id)}>Delete</button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

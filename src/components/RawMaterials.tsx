@@ -107,10 +107,11 @@ function RawMaterials() {
     <div className="component-card">
       <h1>Raw Materials</h1>
 
-      {error && <p className="error" style={{ color: 'rgb(255, 0, 0)', marginBottom: '1rem' }}>{error}</p>}
+      {error && <p className="error" data-cy="error-message" style={{ color: 'rgb(255, 0, 0)', marginBottom: '1rem' }}>{error}</p>}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} data-cy="raw-material-form">
         <input
+          data-cy="raw-material-name-input"
           type="text"
           placeholder="Material Name (ex: Wood)"
           value={name}
@@ -118,6 +119,7 @@ function RawMaterials() {
           required
         />
         <input
+          data-cy="raw-material-quantity-input"
           type="number"
           placeholder="Stock Quantity (ex: 100)"
           value={stockQuantity}
@@ -125,10 +127,11 @@ function RawMaterials() {
           min="1"
           required
         />
-        <button type="submit">{editId === null ? "Add" : "Update"}</button>
+        <button type="submit" data-cy="submit-raw-material-btn">{editId === null ? "Add" : "Update"}</button>
         {editId !== null && (
           <button
             type="button"
+            data-cy="cancel-btn"
             onClick={() => {
               setEditId(null);
               setName("");
@@ -143,6 +146,7 @@ function RawMaterials() {
 
       <div 
         className="table-container"
+        data-cy="raw-materials-list"
         style={{
           maxHeight: materials.length >= 3 ? '400px' : 'none',
           overflowY: materials.length >= 3 ? 'auto' : 'visible',
@@ -157,18 +161,18 @@ function RawMaterials() {
           listStyle: 'none'
         }}>
           {materials.length === 0 ? (
-            <li style={{ justifyContent: 'center', color: '#64748b', fontStyle: 'italic' }}>
+            <li data-cy="empty-state" style={{ justifyContent: 'center', color: '#64748b', fontStyle: 'italic' }}>
               No raw materials found. Create one above.
             </li>
           ) : (
             materials.map((m) => (
-              <li key={m.id}>
+              <li key={m.id} data-cy="raw-material-row">
                 <span>
-                  <strong>{m.name}</strong> - Quantity: {m.stockQuantity}
+                  <strong data-cy="raw-material-name" data-testid="raw-material-name">{m.name}</strong> - Quantity: <span data-cy="raw-material-stock" data-testid="raw-material-stock">{m.stockQuantity}</span>
                 </span>
                 <div className="actions">
-                  <button className="edit-btn" onClick={() => handleEdit(m)}>Edit</button>
-                  <button className="delete-btn" onClick={() => handleDelete(m.id)}>Delete</button>
+                  <button className="edit-btn" data-cy="edit-raw-material-btn" onClick={() => handleEdit(m)}>Edit</button>
+                  <button className="delete-btn" data-cy="delete-raw-material-btn" onClick={() => handleDelete(m.id)}>Delete</button>
                 </div>
               </li>
             ))
