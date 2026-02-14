@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import axios, { type AxiosResponse, type AxiosError } from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface Product {
   id: number;
@@ -32,14 +33,12 @@ function ProductRawMaterials() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const API_URL = "http://localhost:8080/product-materials";
-
   // Buscar associações
   const fetchAssociations = async () => {
     setRefreshing(true);
     setError("");
     try {
-      const res: AxiosResponse<ProductRawMaterial[]> = await axios.get(API_URL);
+      const res: AxiosResponse<ProductRawMaterial[]> = await axios.get(`${API_URL}/product-materials`);
       setAssociations(res.data);
     } catch (err: AxiosError | any) {
       setError("Failed to fetch associations");
@@ -52,7 +51,7 @@ function ProductRawMaterials() {
   // Buscar produtos
   const fetchProducts = async () => {
     try {
-      const res: AxiosResponse<Product[]> = await axios.get("http://localhost:8080/products");
+      const res: AxiosResponse<Product[]> = await axios.get(`${API_URL}/products`);
       setProducts(res.data);
     } catch (err: AxiosError | any) {
       console.error(err);
@@ -62,7 +61,7 @@ function ProductRawMaterials() {
   // Buscar matérias-primas
   const fetchRawMaterials = async () => {
     try {
-      const res: AxiosResponse<RawMaterial[]> = await axios.get("http://localhost:8080/raw-materials");
+      const res: AxiosResponse<RawMaterial[]> = await axios.get(`${API_URL}/raw-materials`);
       setRawMaterials(res.data);
     } catch (err: AxiosError | any) {
       console.error(err);
@@ -118,9 +117,9 @@ function ProductRawMaterials() {
 
     try {
       if (editId === null) {
-        await axios.post<ProductRawMaterial>(API_URL, payload);
+        await axios.post<ProductRawMaterial>(`${API_URL}/product-materials`, payload);
       } else {
-        await axios.put<ProductRawMaterial>(`${API_URL}/${editId}`, payload);
+        await axios.put<ProductRawMaterial>(`${API_URL}/product-materials/${editId}`, payload);
       }
       await fetchAssociations();
       resetForm();
@@ -148,7 +147,7 @@ function ProductRawMaterials() {
     setLoading(true);
     setError("");
     try {
-      await axios.delete(`${API_URL}/${id}`);
+      await axios.delete(`${API_URL}/product-materials/${id}`);
       await fetchAssociations();
     } catch (err: AxiosError | any) {
       setError("Failed to delete association");

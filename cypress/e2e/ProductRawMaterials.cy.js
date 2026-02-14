@@ -1,5 +1,4 @@
-// cypress/e2e/product-raw-materials.cy.js
-// Testes básicos CRUD para ProductRawMaterials
+const API_URL = Cypress.env('apiUrl');
 
 describe('Product Raw Materials CRUD', () => {
   
@@ -11,7 +10,7 @@ describe('Product Raw Materials CRUD', () => {
     cy.visit('/product-raw-materials')
     
     // Criar produto de teste
-    cy.request('POST', 'http://localhost:8080/products', {
+    cy.request('POST', `${API_URL}/products`, {
       name: 'Test Product',
       price: 100.00,
       quantity: 10
@@ -20,7 +19,7 @@ describe('Product Raw Materials CRUD', () => {
     })
     
     // Criar matéria-prima de teste
-    cy.request('POST', 'http://localhost:8080/raw-materials', {
+    cy.request('POST', `${API_URL}/raw-materials`, {
       name: 'Test Material',
       stockQuantity: 50
     }).then((response) => {
@@ -34,9 +33,9 @@ describe('Product Raw Materials CRUD', () => {
   // CREATE
   it('should create a new association', () => {
     // Limpar todas associações antigas primeiro
-    cy.request('GET', 'http://localhost:8080/product-materials').then((response) => {
+    cy.request('GET', `${API_URL}/product-materials`).then((response) => {
       response.body.forEach((assoc) => {
-        cy.request('DELETE', `http://localhost:8080/product-materials/${assoc.id}`)
+        cy.request('DELETE', `${API_URL}/product-materials/${assoc.id}`)
       })
     })
     
@@ -60,14 +59,14 @@ describe('Product Raw Materials CRUD', () => {
   // UPDATE
   it('should edit an association', () => {
     // Limpar todas associações antigas primeiro
-    cy.request('GET', 'http://localhost:8080/product-materials').then((response) => {
+    cy.request('GET', `${API_URL}/product-materials`).then((response) => {
       response.body.forEach((assoc) => {
-        cy.request('DELETE', `http://localhost:8080/product-materials/${assoc.id}`)
+        cy.request('DELETE', `${API_URL}/product-materials/${assoc.id}`)
       })
     })
     
     // Criar associação nova
-    cy.request('POST', 'http://localhost:8080/product-materials', {
+    cy.request('POST', `${API_URL}/product-materials`, {
       productId: testProductId,
       rawMaterialId: testRawMaterialId,
       quantityRequired: 5
@@ -92,14 +91,14 @@ describe('Product Raw Materials CRUD', () => {
   // CANCEL EDIT
   it('should cancel edit', () => {
     // Limpar todas associações antigas primeiro
-    cy.request('GET', 'http://localhost:8080/product-materials').then((response) => {
+    cy.request('GET', `${API_URL}/product-materials`).then((response) => {
       response.body.forEach((assoc) => {
-        cy.request('DELETE', `http://localhost:8080/product-materials/${assoc.id}`)
+        cy.request('DELETE', `${API_URL}/product-materials/${assoc.id}`)
       })
     })
     
     // Criar associação nova
-    cy.request('POST', 'http://localhost:8080/product-materials', {
+    cy.request('POST', `${API_URL}/product-materials`, {
       productId: testProductId,
       rawMaterialId: testRawMaterialId,
       quantityRequired: 5
@@ -123,14 +122,14 @@ describe('Product Raw Materials CRUD', () => {
   // DELETE
   it('should delete an association', () => {
     // Limpar todas associações antigas primeiro
-    cy.request('GET', 'http://localhost:8080/product-materials').then((response) => {
+    cy.request('GET', `${API_URL}/product-materials`).then((response) => {
       response.body.forEach((assoc) => {
-        cy.request('DELETE', `http://localhost:8080/product-materials/${assoc.id}`)
+        cy.request('DELETE', `${API_URL}/product-materials/${assoc.id}`)
       })
     })
     
     // Criar associação nova
-    cy.request('POST', 'http://localhost:8080/product-materials', {
+    cy.request('POST', `${API_URL}/product-materials`, {
       productId: testProductId,
       rawMaterialId: testRawMaterialId,
       quantityRequired: 7
@@ -157,14 +156,14 @@ describe('Product Raw Materials CRUD', () => {
   // CANCEL DELETE
   it('should cancel delete', () => {
     // Limpar todas associações antigas primeiro
-    cy.request('GET', 'http://localhost:8080/product-materials').then((response) => {
+    cy.request('GET', `${API_URL}/product-materials`).then((response) => {
       response.body.forEach((assoc) => {
-        cy.request('DELETE', `http://localhost:8080/product-materials/${assoc.id}`)
+        cy.request('DELETE', `${API_URL}/product-materials/${assoc.id}`)
       })
     })
     
     // Criar associação nova
-    cy.request('POST', 'http://localhost:8080/product-materials', {
+    cy.request('POST', `${API_URL}/product-materials`, {
       productId: testProductId,
       rawMaterialId: testRawMaterialId,
       quantityRequired: 7

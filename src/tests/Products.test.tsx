@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import Products from "../components/Products";
 import axios from "axios";
 import { vi } from "vitest";
+const API_URL = import.meta.env.VITE_API_URL;
 
 vi.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -41,7 +42,7 @@ describe("Products Component - Suite Completa", () => {
 
       await waitFor(() => {
         expect(mockedAxios.get).toHaveBeenCalledTimes(1);
-        expect(mockedAxios.get).toHaveBeenCalledWith("http://localhost:8080/products");
+        expect(mockedAxios.get).toHaveBeenCalledWith(`${API_URL}/products`);
       });
     });
 
@@ -191,7 +192,7 @@ describe("Products Component - Suite Completa", () => {
       await waitFor(() => {
         expect(mockedAxios.post).toHaveBeenCalledTimes(1);
         expect(mockedAxios.post).toHaveBeenCalledWith(
-          "http://localhost:8080/products",
+          `${API_URL}/products`,
           {
             name: "Mouse Gamer",
             price: 50,
@@ -373,7 +374,7 @@ describe("Products Component - Suite Completa", () => {
       await waitFor(() => {
         expect(mockedAxios.put).toHaveBeenCalledTimes(1);
         expect(mockedAxios.put).toHaveBeenCalledWith(
-          "http://localhost:8080/products/1",
+          `${API_URL}/products/1`,
           {
             name: "PC Gamer",
             price: 150,
@@ -443,7 +444,7 @@ describe("Products Component - Suite Completa", () => {
 
       await waitFor(() => {
         expect(mockedAxios.put).toHaveBeenCalledWith(
-          "http://localhost:8080/products/1",
+          `${API_URL}/products/1`,
           {
             name: "PC Gamer Pro",
             price: 200,
@@ -490,7 +491,7 @@ describe("Products Component - Suite Completa", () => {
 
       await waitFor(() => {
         expect(mockedAxios.delete).toHaveBeenCalledTimes(1);
-        expect(mockedAxios.delete).toHaveBeenCalledWith("http://localhost:8080/products/1");
+        expect(mockedAxios.delete).toHaveBeenCalledWith(`${API_URL}/products/1`);
       });
     });
 
@@ -648,7 +649,7 @@ describe("Products Component - Suite Completa", () => {
 
       await waitFor(() => {
         expect(mockedAxios.post).toHaveBeenCalledWith(
-          "http://localhost:8080/products",
+          `${API_URL}/products`,
           expect.objectContaining({
             price: 99.99,
           })
@@ -730,7 +731,7 @@ describe("Products Component - Suite Completa", () => {
 
       await waitFor(() => {
         expect(mockedAxios.post).toHaveBeenCalledWith(
-          "http://localhost:8080/products",
+          `${API_URL}/products`,
           expect.objectContaining({
             quantity: 1,
           })

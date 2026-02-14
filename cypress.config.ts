@@ -1,6 +1,13 @@
-const { defineConfig } = require('cypress')
+import { defineConfig } from 'cypress'
+import * as dotenv from 'dotenv'
 
-module.exports = defineConfig({
+// Carrega variáveis do arquivo .env
+dotenv.config()
+
+// Lê a URL do backend do arquivo .env
+const API_URL = process.env.VITE_API_URL || 'http://localhost:8080';
+
+export default defineConfig({
   e2e: {
     // URL base do seu front-end
     baseUrl: 'http://localhost:5173',
@@ -31,16 +38,16 @@ module.exports = defineConfig({
     
     // Variáveis de ambiente
     env: {
-      apiUrl: 'http://localhost:8080',
+      apiUrl: API_URL,
     },
     
     // Configuração de navegadores suportados
-    setupNodeEvents(on, config) {
+    setupNodeEvents(on: Cypress.PluginEvents, config: Cypress.PluginConfigOptions) {
       // Implementar listeners de eventos aqui se necessário
       
       // Exemplo: Task para resetar banco de dados
       on('task', {
-        log(message) {
+        log(message: string) {
           console.log(message)
           return null
         },

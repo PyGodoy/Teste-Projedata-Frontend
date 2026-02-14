@@ -1,5 +1,4 @@
-// cypress/e2e/raw-materials.cy.js
-// Testes para o componente RawMaterials
+const API_URL = Cypress.env('apiUrl');
 
 describe('Raw Materials CRUD', () => {
   
@@ -31,7 +30,6 @@ describe('Raw Materials CRUD', () => {
     it('should validate empty quantity field', () => {
         cy.get('[data-cy="raw-material-name-input"]').type('Test Material')
         
-        // ← ADICIONEI ESTA LINHA
         cy.get('[data-cy="raw-material-quantity-input"]').invoke('removeAttr', 'required')
         
         cy.get('[data-cy="submit-raw-material-btn"]').click()
@@ -54,11 +52,11 @@ describe('Raw Materials CRUD', () => {
   describe('Read Raw Materials', () => {
     
     it('should list all raw materials', () => {
-      cy.request('POST', 'http://localhost:8080/raw-materials', {
+      cy.request('POST', `${API_URL}/raw-materials`, {
         name: 'Wood',
         stockQuantity: 75
       })
-      cy.request('POST', 'http://localhost:8080/raw-materials', {
+      cy.request('POST', `${API_URL}/raw-materials`, {
         name: 'Plastic',
         stockQuantity: 50
       })
@@ -69,7 +67,7 @@ describe('Raw Materials CRUD', () => {
     })
 
     it('should display raw material details correctly', () => {
-      cy.request('POST', 'http://localhost:8080/raw-materials', {
+      cy.request('POST', `${API_URL}/raw-materials`, {
         name: 'Aluminum',
         stockQuantity: 200
       })
@@ -97,7 +95,7 @@ describe('Raw Materials CRUD', () => {
   describe('Update Raw Material', () => {
     
     beforeEach(() => {
-      cy.request('POST', 'http://localhost:8080/raw-materials', {
+      cy.request('POST', `${API_URL}/raw-materials`, {
         name: 'Original Material',
         stockQuantity: 100
       })
@@ -138,41 +136,36 @@ describe('Raw Materials CRUD', () => {
   describe('Delete Raw Material', () => {
     
     beforeEach(() => {
-        cy.request('POST', 'http://localhost:8080/raw-materials', {
+        cy.request('POST', `${API_URL}/raw-materials`, {
             name: 'Material to Delete',
             stockQuantity: 100
         })
 
-        cy.intercept('GET', 'http://localhost:8080/raw-materials').as('getMaterials')
+        cy.intercept('GET', `${API_URL}/raw-materials`).as('getMaterials')
         cy.reload()
         cy.wait('@getMaterials')
     })
 
     it('should delete material with confirmation', () => {
-      // Contar linhas antes
       cy.get('[data-cy="raw-material-row"]').its('length').then((countBefore) => {
         
         cy.window().then((win) => {
           cy.stub(win, 'confirm').returns(true)
         })
         
-        // Interceptar requisições
-        cy.intercept('DELETE', 'http://localhost:8080/raw-materials/*').as('deleteMaterial')
-        cy.intercept('GET', 'http://localhost:8080/raw-materials').as('getMaterials')
+        cy.intercept('DELETE', `${API_URL}/raw-materials/*`).as('deleteMaterial')
+        cy.intercept('GET', `${API_URL}/raw-materials`).as('getMaterials')
         
         cy.get('[data-cy="delete-raw-material-btn"]').last().click()
         
-        // Esperar requisições terminarem
         cy.wait('@deleteMaterial')
         cy.wait('@getMaterials')
         
-        // Verificar que tem 1 linha a menos
         cy.get('[data-cy="raw-material-row"]').should('have.length', countBefore - 1)
       })
     })
 
     it('should cancel deletion', () => {
-      // Contar linhas antes
       cy.get('[data-cy="raw-material-row"]').its('length').then((countBefore) => {
         
         cy.window().then((win) => {
@@ -181,7 +174,6 @@ describe('Raw Materials CRUD', () => {
         
         cy.get('[data-cy="delete-raw-material-btn"]').last().click()
         
-        // Verificar que manteve a mesma quantidade
         cy.get('[data-cy="raw-material-row"]').should('have.length', countBefore)
       })
     })

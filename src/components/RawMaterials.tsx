@@ -1,5 +1,6 @@
-import { useEffect, useState, type FormEvent, useRef } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import axios, { type AxiosResponse, type AxiosError } from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface RawMaterial {
   id: number;
@@ -14,11 +15,9 @@ function RawMaterials() {
   const [editId, setEditId] = useState<number | null>(null);
   const [error, setError] = useState<string>("");
 
-  const API_URL = "http://localhost:8080/raw-materials";
-
   const fetchMaterials = () => {
     axios
-      .get<RawMaterial[]>(API_URL)
+      .get<RawMaterial[]>(`${API_URL}/raw-materials`)
       .then((res: AxiosResponse<RawMaterial[]>) => setMaterials(res.data))
       .catch((err: AxiosError) => {
         console.error(err);
@@ -50,7 +49,7 @@ function RawMaterials() {
     if (editId === null) {
       // Criar
       axios
-        .post<RawMaterial>(API_URL, payload)
+        .post<RawMaterial>(`${API_URL}/raw-materials`, payload)
         .then(() => {
           fetchMaterials();
           setName("");
@@ -64,7 +63,7 @@ function RawMaterials() {
     } else {
       // Atualizar
       axios
-        .put<RawMaterial>(`${API_URL}/${editId}`, payload)
+        .put<RawMaterial>(`${API_URL}/raw-materials/${editId}`, payload)
         .then(() => {
           fetchMaterials();
           setName("");
@@ -92,7 +91,7 @@ function RawMaterials() {
     if (!window.confirm("Are you sure you want to delete this raw material?")) return;
     
     axios
-      .delete(`${API_URL}/${id}`)
+      .delete(`${API_URL}/raw-materials/${id}`)
       .then(() => {
         fetchMaterials();
         setError("");

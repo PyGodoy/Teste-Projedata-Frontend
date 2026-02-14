@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import ProductRawMaterials from "../components/ProductRawMaterials";
 import axios from "axios";
 import { vi } from "vitest";
+const API_URL = import.meta.env.VITE_API_URL;
 
 vi.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -78,9 +79,9 @@ describe("ProductRawMaterials Component - Suite Completa", () => {
         expect(mockedAxios.get).toHaveBeenCalledTimes(3);
       });
 
-      expect(mockedAxios.get).toHaveBeenCalledWith("http://localhost:8080/products");
-      expect(mockedAxios.get).toHaveBeenCalledWith("http://localhost:8080/raw-materials");
-      expect(mockedAxios.get).toHaveBeenCalledWith("http://localhost:8080/product-materials");
+      expect(mockedAxios.get).toHaveBeenCalledWith(`${API_URL}/products`);
+      expect(mockedAxios.get).toHaveBeenCalledWith(`${API_URL}/raw-materials`);
+      expect(mockedAxios.get).toHaveBeenCalledWith(`${API_URL}/product-materials`);
     });
 
     it("renderiza título correto", async () => {
@@ -310,7 +311,7 @@ describe("ProductRawMaterials Component - Suite Completa", () => {
       await waitFor(() => {
         expect(mockedAxios.post).toHaveBeenCalledTimes(1);
         expect(mockedAxios.post).toHaveBeenCalledWith(
-          "http://localhost:8080/product-materials",
+          `${API_URL}/product-materials`,
           {
             productId: 1,
             rawMaterialId: 1,
@@ -477,7 +478,7 @@ describe("ProductRawMaterials Component - Suite Completa", () => {
       await waitFor(() => {
         expect(mockedAxios.put).toHaveBeenCalledTimes(1);
         expect(mockedAxios.put).toHaveBeenCalledWith(
-          "http://localhost:8080/product-materials/1",
+          `${API_URL}/product-materials/1`,
           {
             productId: 1,
             rawMaterialId: 1,
@@ -554,7 +555,7 @@ describe("ProductRawMaterials Component - Suite Completa", () => {
       await waitFor(() => {
         expect(mockedAxios.delete).toHaveBeenCalledTimes(1);
         expect(mockedAxios.delete).toHaveBeenCalledWith(
-          "http://localhost:8080/product-materials/1"
+          `${API_URL}/product-materials/1`
         );
       });
     });

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios, { type AxiosResponse, type AxiosError } from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface ProductionProduct {
   name: string;
@@ -23,7 +24,7 @@ function Production() {
     setError(null);
 
     axios
-      .get<ProductionResponse>("http://localhost:8080/production")
+      .get<ProductionResponse>(`${API_URL}/production`)
       .then((res: AxiosResponse<ProductionResponse>) => {
         setProducts(res.data.products);
         setTotalValue(res.data.totalValue);

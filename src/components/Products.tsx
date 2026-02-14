@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
-import axios, { type AxiosResponse, type AxiosError } from "axios";
+import axios, { type AxiosResponse } from "axios";
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface Product {
   id: number;
@@ -22,7 +23,7 @@ function Products() {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res: AxiosResponse<Product[]> = await axios.get("http://localhost:8080/products");
+      const res: AxiosResponse<Product[]> = await axios.get(`${API_URL}/products`);
       setProducts(res.data);
     } catch (err) {
       setError("Failed to fetch products");
@@ -71,9 +72,9 @@ function Products() {
 
     try {
       if (form.id) {
-        await axios.put(`http://localhost:8080/products/${form.id}`, productData);
+        await axios.put(`${API_URL}/products/${form.id}`, productData);
       } else {
-        await axios.post("http://localhost:8080/products", productData);
+        await axios.post(`${API_URL}/products`, productData);
       }
       setForm({ name: "", price: "", quantity: "" });
       fetchProducts();
@@ -95,7 +96,7 @@ function Products() {
   const handleDelete = async (id: number) => {
     if (!window.confirm("Are you sure you want to delete this product?")) return;
     try {
-      await axios.delete(`http://localhost:8080/products/${id}`);
+      await axios.delete(`${API_URL}/products/${id}`);
       fetchProducts();
     } catch (err) {
       setError("Failed to delete product");

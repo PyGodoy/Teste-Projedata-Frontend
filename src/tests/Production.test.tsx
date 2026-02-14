@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import Production from "../components/Production";
 import axios from "axios";
 import { vi } from "vitest";
+const API_URL = import.meta.env.VITE_API_URL;
 
 vi.mock("axios");
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -32,7 +33,7 @@ describe("Production Component - Suite Completa", () => {
       render(<Production />);
 
       expect(mockedAxios.get).toHaveBeenCalledTimes(1);
-      expect(mockedAxios.get).toHaveBeenCalledWith("http://localhost:8080/production");
+      expect(mockedAxios.get).toHaveBeenCalledWith(`${API_URL}/production`);
     });
   });
 

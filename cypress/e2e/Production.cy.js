@@ -1,5 +1,4 @@
-// cypress/e2e/production.cy.js
-// Testes básicos para o componente Production
+const API_URL = Cypress.env('apiUrl');
 
 describe('Production Component', () => {
   
@@ -21,9 +20,9 @@ describe('Production Component', () => {
   // TESTE 2: Mostrar empty state quando não há produtos
   it('should show empty state when no products can be produced', () => {
     // Limpar todos os dados
-    cy.request('GET', 'http://localhost:8080/product-materials').then((response) => {
+    cy.request('GET', `${API_URL}/product-materials`).then((response) => {
       response.body.forEach((assoc) => {
-        cy.request('DELETE', `http://localhost:8080/product-materials/${assoc.id}`)
+        cy.request('DELETE', `http://${API_URL}/product-materials/${assoc.id}`)
       })
     })
     
@@ -38,7 +37,7 @@ describe('Production Component', () => {
   // TESTE 3: Mostrar produtos quando existem dados
   it('should display production data when products can be produced', () => {
     // Criar produto
-    cy.request('POST', 'http://localhost:8080/products', {
+    cy.request('POST', `${API_URL}/products`, {
       name: 'Test Product',
       price: 100.00,
       quantity: 10
@@ -47,7 +46,7 @@ describe('Production Component', () => {
     })
     
     // Criar matéria-prima
-    cy.request('POST', 'http://localhost:8080/raw-materials', {
+    cy.request('POST', `${API_URL}/raw-materials`, {
       name: 'Test Material',
       stockQuantity: 50
     }).then((response) => {
@@ -56,7 +55,7 @@ describe('Production Component', () => {
     
     // Criar associação
     cy.then(() => {
-      cy.request('POST', 'http://localhost:8080/product-materials', {
+      cy.request('POST', `${API_URL}/product-materials`, {
         productId: testProductId,
         rawMaterialId: testRawMaterialId,
         quantityRequired: 2
@@ -85,7 +84,7 @@ describe('Production Component', () => {
 
   // TESTE 5: Botão de refresh funciona
   it('should refresh data when refresh button is clicked', () => {
-    cy.intercept('GET', 'http://localhost:8080/production').as('getProduction')
+    cy.intercept('GET', `${API_URL}/production`).as('getProduction')
     
     cy.get('[data-cy="refresh-btn"]').first().click()
     
@@ -95,7 +94,7 @@ describe('Production Component', () => {
   // TESTE 6: Verificar formato do preço
   it('should display prices in correct format', () => {
     // Criar dados de teste primeiro
-    cy.request('POST', 'http://localhost:8080/products', {
+    cy.request('POST', `${API_URL}/products`, {
       name: 'Price Test Product',
       price: 123.45,
       quantity: 10
@@ -103,7 +102,7 @@ describe('Production Component', () => {
       testProductId = response.body.id;
     })
     
-    cy.request('POST', 'http://localhost:8080/raw-materials', {
+    cy.request('POST', `${API_URL}/raw-materials`, {
       name: 'Price Test Material',
       stockQuantity: 100
     }).then((response) => {
@@ -111,7 +110,7 @@ describe('Production Component', () => {
     })
     
     cy.then(() => {
-      cy.request('POST', 'http://localhost:8080/product-materials', {
+      cy.request('POST', `${API_URL}/product-materials`, {
         productId: testProductId,
         rawMaterialId: testRawMaterialId,
         quantityRequired: 1
@@ -130,7 +129,7 @@ describe('Production Component', () => {
   // TESTE 7: Verificar que o total value é exibido
   it('should calculate and display total value', () => {
     // Criar dados de teste
-    cy.request('POST', 'http://localhost:8080/products', {
+    cy.request('POST', `${API_URL}/products`, {
       name: 'Value Test Product',
       price: 50.00,
       quantity: 10
@@ -138,7 +137,7 @@ describe('Production Component', () => {
       testProductId = response.body.id;
     })
     
-    cy.request('POST', 'http://localhost:8080/raw-materials', {
+    cy.request('POST', `${API_URL}/raw-materials`, {
       name: 'Value Test Material',
       stockQuantity: 100
     }).then((response) => {
@@ -146,7 +145,7 @@ describe('Production Component', () => {
     })
     
     cy.then(() => {
-      cy.request('POST', 'http://localhost:8080/product-materials', {
+      cy.request('POST', `${API_URL}/product-materials`, {
         productId: testProductId,
         rawMaterialId: testRawMaterialId,
         quantityRequired: 1
