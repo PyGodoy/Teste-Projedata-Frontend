@@ -22,7 +22,7 @@ describe('Production Component', () => {
     // Limpar todos os dados
     cy.request('GET', `${API_URL}/product-materials`).then((response) => {
       response.body.forEach((assoc) => {
-        cy.request('DELETE', `http://${API_URL}/product-materials/${assoc.id}`)
+        cy.request('DELETE', `${API_URL}/product-materials/${assoc.id}`)
       })
     })
     
