@@ -129,7 +129,7 @@ npm run cypress:run
 
 O frontend se comunica com a API backend através do Axios. 
 
-**URL da API:** `http://localhost:8080`
+**URL da API:** `http://localhost:8080` ou [https://inventory-api-projedata.up.railway.app](https://inventory-api-projedata.up.railway.app/q/swagger-ui/)
 
 Certifique-se de que o backend está rodando antes de iniciar o frontend.
 
