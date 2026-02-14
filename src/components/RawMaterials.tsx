@@ -1,5 +1,5 @@
-import { useEffect, useState, type FormEvent } from "react";
-import axios, { type AxiosResponse, type AxiosError } from "axios";
+import { useEffect, useState, useRef } from "react";
+import axios, { type AxiosResponse } from "axios";
 const API_URL = import.meta.env.VITE_API_URL;
 
 interface RawMaterial {
@@ -10,140 +10,133 @@ interface RawMaterial {
 
 function RawMaterials() {
   const [materials, setMaterials] = useState<RawMaterial[]>([]);
-  const [name, setName] = useState("");
-  const [stockQuantity, setStockQuantity] = useState<string>("");
-  const [editId, setEditId] = useState<number | null>(null);
-  const [error, setError] = useState<string>("");
+  const [form, setForm] = useState<{ id?: number; name: string; stockQuantity: string }>({
+    name: "",
+    stockQuantity: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const tableContainerRef = useRef<HTMLDivElement>(null);
 
-  const fetchMaterials = () => {
-    axios
-      .get<RawMaterial[]>(`${API_URL}/raw-materials`)
-      .then((res: AxiosResponse<RawMaterial[]>) => setMaterials(res.data))
-      .catch((err: AxiosError) => {
-        console.error(err);
-        setError("Failed to fetch raw materials");
-      });
+  const fetchMaterials = async () => {
+    setLoading(true);
+    try {
+      const res: AxiosResponse<RawMaterial[]> = await axios.get(`${API_URL}/raw-materials`);
+      setMaterials(res.data);
+    } catch (err) {
+      setError("Failed to fetch raw materials");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchMaterials();
   }, []);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!name || !stockQuantity) {
+    // Validar campos
+    if (!form.name || !form.stockQuantity) {
       setError("Please fill all fields");
       return;
     }
 
-    const quantity = parseInt(stockQuantity);
-    
-    if (isNaN(quantity) || quantity <= 0) {
+    const stockQuantity = parseInt(form.stockQuantity);
+
+    if (isNaN(stockQuantity) || stockQuantity <= 0) {
       setError("Stock quantity must be a positive number");
       return;
     }
 
-    const payload = { name, stockQuantity: quantity };
+    const materialData = {
+      name: form.name,
+      stockQuantity: stockQuantity
+    };
 
-    if (editId === null) {
-      // Criar
-      axios
-        .post<RawMaterial>(`${API_URL}/raw-materials`, payload)
-        .then(() => {
-          fetchMaterials();
-          setName("");
-          setStockQuantity("");
-          setError("");
-        })
-        .catch((err: AxiosError) => {
-          console.error(err);
-          setError("Failed to create raw material");
-        });
-    } else {
-      // Atualizar
-      axios
-        .put<RawMaterial>(`${API_URL}/raw-materials/${editId}`, payload)
-        .then(() => {
-          fetchMaterials();
-          setName("");
-          setStockQuantity("");
-          setEditId(null);
-          setError("");
-        })
-        .catch((err: AxiosError) => {
-          console.error(err);
-          setError("Failed to update raw material");
-        });
+    try {
+      if (form.id) {
+        await axios.put(`${API_URL}/raw-materials/${form.id}`, materialData);
+      } else {
+        await axios.post(`${API_URL}/raw-materials`, materialData);
+      }
+      setForm({ name: "", stockQuantity: "" });
+      fetchMaterials();
+    } catch (err) {
+      setError("Failed to save raw material");
+      console.error(err);
     }
   };
 
-  // Editar
   const handleEdit = (material: RawMaterial) => {
-    setName(material.name);
-    setStockQuantity(material.stockQuantity.toString());
-    setEditId(material.id);
-    setError("");
+    setForm({ 
+      id: material.id, 
+      name: material.name, 
+      stockQuantity: material.stockQuantity.toString() 
+    });
   };
 
-  // Deletar
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     if (!window.confirm("Are you sure you want to delete this raw material?")) return;
-    
-    axios
-      .delete(`${API_URL}/raw-materials/${id}`)
-      .then(() => {
-        fetchMaterials();
-        setError("");
-      })
-      .catch((err: AxiosError) => {
-        console.error(err);
-        setError("Failed to delete raw material");
-      });
+    try {
+      await axios.delete(`${API_URL}/raw-materials/${id}`);
+      fetchMaterials();
+    } catch (err) {
+      setError("Failed to delete raw material");
+      console.error(err);
+    }
   };
 
   return (
     <div className="component-card">
       <h1>Raw Materials</h1>
 
-      {error && <p className="error" data-cy="error-message" style={{ color: 'rgb(255, 0, 0)', marginBottom: '1rem' }}>{error}</p>}
-
       <form onSubmit={handleSubmit} data-cy="raw-material-form">
         <input
           data-cy="raw-material-name-input"
           type="text"
+          name="name"
           placeholder="Material Name (ex: Wood)"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={form.name}
+          onChange={handleChange}
           required
         />
         <input
           data-cy="raw-material-quantity-input"
           type="number"
+          name="stockQuantity"
           placeholder="Stock Quantity (ex: 100)"
-          value={stockQuantity}
-          onChange={(e) => setStockQuantity(e.target.value)}
+          value={form.stockQuantity}
+          onChange={handleChange}
           min="1"
           required
         />
-        <button type="submit" data-cy="submit-raw-material-btn">{editId === null ? "Add" : "Update"}</button>
-        {editId !== null && (
+        <button type="submit" data-cy="submit-raw-material-btn">
+          {form.id ? "Update" : "Add"}
+        </button>
+        {form.id && (
           <button
             type="button"
             data-cy="cancel-btn"
-            onClick={() => {
-              setEditId(null);
-              setName("");
-              setStockQuantity("");
-              setError("");
-            }}
+            onClick={() => setForm({ name: "", stockQuantity: "" })}
           >
             Cancel
           </button>
         )}
       </form>
 
+      {loading && <p data-cy="loading">Loading...</p>}
+      {error && <p className="error" data-cy="error-message" style={{ color: 'rgb(255, 0, 0)' }}>{error}</p>}
+
       <div 
+        ref={tableContainerRef}
         className="table-container"
         data-cy="raw-materials-list"
         style={{
@@ -151,33 +144,54 @@ function RawMaterials() {
           overflowY: materials.length >= 3 ? 'auto' : 'visible',
           border: materials.length >= 3 ? '1px solid #e1e4f0' : 'none',
           borderRadius: '8px',
-          padding: materials.length >= 3 ? '0.5rem' : '0'
+          transition: 'all 0.3s ease'
         }}
       >
-        <ul style={{ 
-          margin: 0,
-          padding: 0,
-          listStyle: 'none'
-        }}>
-          {materials.length === 0 ? (
-            <li data-cy="empty-state" style={{ justifyContent: 'center', color: '#64748b', fontStyle: 'italic' }}>
-              No raw materials found. Create one above.
-            </li>
-          ) : (
-            materials.map((m) => (
-              <li key={m.id} data-cy="raw-material-row">
-                <span>
-                  <strong data-cy="raw-material-name" data-testid="raw-material-name">{m.name}</strong> - Quantity: <span data-cy="raw-material-stock" data-testid="raw-material-stock">{m.stockQuantity}</span>
-                </span>
-                <div className="actions">
-                  <button className="edit-btn" data-cy="edit-raw-material-btn" onClick={() => handleEdit(m)}>Edit</button>
-                  <button className="delete-btn" data-cy="delete-raw-material-btn" onClick={() => handleDelete(m.id)}>Delete</button>
-                </div>
-              </li>
-            ))
-          )}
-        </ul>
+        <table>
+          <thead style={materials.length >= 3 ? { position: 'sticky', top: 0, background: '#f8f9fc', zIndex: 1 } : {}}>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Stock Quantity</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {materials.length === 0 && !loading ? (
+              <tr data-cy="empty-state">
+                <td colSpan={4} style={{ textAlign: 'center', color: '#64748b', fontStyle: 'italic' }}>
+                  No raw materials found. Create one above.
+                </td>
+              </tr>
+            ) : (
+              materials.map((m) => (
+                <tr key={m.id} data-cy="raw-material-row">
+                  <td>{m.id}</td>
+                  <td data-cy="raw-material-name" data-testid="raw-material-name">{m.name}</td>
+                  <td data-cy="raw-material-stock" data-testid="raw-material-stock">{m.stockQuantity}</td>
+                  <td>
+                    <div className="actions">
+                      <button className="edit-btn" data-cy="edit-raw-material-btn" onClick={() => handleEdit(m)}>Edit</button>
+                      <button className="delete-btn" data-cy="delete-raw-material-btn" onClick={() => handleDelete(m.id)}>Delete</button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
+
+      {materials.length >= 3 && (
+        <p style={{ 
+          marginTop: '0.75rem', 
+          fontSize: '0.875rem', 
+          color: '#64748b',
+          textAlign: 'right'
+        }}>
+          Showing {materials.length} raw materials (scroll enabled)
+        </p>
+      )}
     </div>
   );
 }

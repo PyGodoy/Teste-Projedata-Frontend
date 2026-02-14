@@ -56,9 +56,10 @@ describe("RawMaterials Component", () => {
 
       await waitFor(() => {
         expect(screen.getByText(/No raw materials found. Create one above./i)).toBeInTheDocument();
-        // A mensagem é um <li>, então a lista tem 1 filho
-        const list = screen.getByRole("list");
-        expect(list.children).toHaveLength(1);
+        // A mensagem está em uma table row
+        const rows = screen.getAllByRole("row");
+        // 1 header row + 1 empty state row
+        expect(rows).toHaveLength(2);
       });
     });
 
@@ -74,7 +75,9 @@ describe("RawMaterials Component", () => {
       render(<RawMaterials />);
 
       await waitFor(() => {
-        expect(screen.getAllByRole("listitem")).toHaveLength(3);
+        // Get all rows with data-cy="raw-material-row"
+        const materialRows = screen.getAllByTestId("raw-material-name");
+        expect(materialRows).toHaveLength(3);
       });
     });
   });
@@ -316,10 +319,10 @@ describe("RawMaterials Component", () => {
       render(<RawMaterials />);
 
       await waitFor(() => {
-        const items = screen.getAllByRole("listitem");
-        expect(items[0]).toHaveTextContent("GPU");
-        expect(items[1]).toHaveTextContent("CPU");
-        expect(items[2]).toHaveTextContent("RAM");
+        const nameElements = screen.getAllByTestId("raw-material-name");
+        expect(nameElements[0]).toHaveTextContent("GPU");
+        expect(nameElements[1]).toHaveTextContent("CPU");
+        expect(nameElements[2]).toHaveTextContent("RAM");
       });
     });
 
@@ -494,8 +497,8 @@ describe("RawMaterials Component", () => {
       render(<RawMaterials />);
 
       await waitFor(() => {
-        const listItems = screen.getAllByRole("listitem");
-        expect(listItems).toHaveLength(3);
+        const materialRows = screen.getAllByTestId("raw-material-name");
+        expect(materialRows).toHaveLength(3);
         expect(screen.getAllByRole("button", { name: /edit/i })).toHaveLength(3);
         expect(screen.getAllByRole("button", { name: /delete/i })).toHaveLength(3);
       });
