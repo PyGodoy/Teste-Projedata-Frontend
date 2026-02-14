@@ -18,7 +18,7 @@ Link: [https://inventory-projedata.vercel.app](https://inventory-projedata.verce
 
 - Node.js (versão 16 ou superior)
 - npm ou yarn
-- <span style="color:red; font-weight:bold;">MUITO IMPORTANTE:</span> Configurar o .env
+- ⚠️ **MUITO IMPORTANTE:** Configurar o .env
 - Backend da API rodando em `http://localhost:8080` e/ou em Produção `https://inventory-api-projedata.up.railway.app`
 
 ## 🔧 Instalação
