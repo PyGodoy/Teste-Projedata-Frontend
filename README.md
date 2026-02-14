@@ -149,6 +149,7 @@ Certifique-se de que o backend está rodando antes de iniciar o frontend.
 
 - [ ] Backend rodando em `localhost:8080` e `https://inventory-api-projedata.up.railway.app`
 - [ ] Dependências instaladas (`npm install`)
+- [ ] .env Configurado
 - [ ] Servidor de desenvolvimento iniciado (`npm run dev`)
 - [ ] Testes unitários passando (`npm run test`)
 - [ ] Testes E2E passando (`npm run cypress:run`)
