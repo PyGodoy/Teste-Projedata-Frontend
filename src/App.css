@@ -24,7 +24,6 @@ body {
   padding: 2rem;
 }
 
-/* Header Styles */
 h1 {
   font-size: 1.75rem;
   font-weight: 700;
@@ -40,7 +39,6 @@ h2 {
   margin-top: 1.5rem;
 }
 
-/* Card Container */
 .component-card {
   background: white;
   border-radius: 12px;
@@ -54,7 +52,6 @@ h2 {
   box-shadow: 0 4px 12px rgba(12, 15, 61, 0.12);
 }
 
-/* Form Styles */
 form {
   display: flex;
   gap: 0.75rem;
@@ -88,7 +85,6 @@ input::placeholder {
   color: #9ca3b8;
 }
 
-/* Button Styles */
 button {
   padding: 0.625rem 1.5rem;
   border: none;
@@ -125,7 +121,6 @@ button[type="button"]:hover {
   color: #3246FF;
 }
 
-/* Edit Button */
 .edit-btn {
   background: white;
   color: #3246FF;
@@ -137,7 +132,6 @@ button[type="button"]:hover {
   color: white;
 }
 
-/* Delete Button */
 .delete-btn {
   background: white;
   color: #ef4444;
@@ -150,7 +144,6 @@ button[type="button"]:hover {
   transform: translateY(-1px);
 }
 
-/* Table Styles */
 table {
   width: 100%;
   border-collapse: separate;
@@ -202,7 +195,6 @@ td button {
   margin-right: 0.5rem;
 }
 
-/* List Styles */
 ul {
   list-style: none;
   margin-top: 1.5rem;
@@ -231,7 +223,6 @@ li button {
   margin-left: 0.5rem;
 }
 
-/* Loading & Error States */
 p {
   margin: 1rem 0;
   font-size: 0.9375rem;
@@ -249,7 +240,6 @@ p.error {
   border: 1px solid #fecaca;
 }
 
-/* Total Value Highlight */
 .total-value {
   background: linear-gradient(135deg, #3246FF 0%, #0C0F3D 100%);
   color: white;
@@ -265,13 +255,11 @@ p.error {
   font-size: 1.75rem;
 }
 
-/* Actions Container */
 .actions {
   display: flex;
   gap: 0.5rem;
 }
 
-/* Header Styles */
 .app-header {
   background: #0C0F3D;
   box-shadow: 0 2px 8px rgba(12, 15, 61, 0.15);
@@ -343,7 +331,6 @@ p.error {
   letter-spacing: 0.03em;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .App {
     padding: 1rem;

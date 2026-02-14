@@ -87,9 +87,9 @@ body {
   font-weight: 600;
   border: 1px solid rgba(50, 70, 255, 0.3);
   letter-spacing: 0.03em;
+  white-space: nowrap;
 }
 
-/* Header Styles */
 h1 {
   font-size: 1.75rem;
   font-weight: 700;
@@ -105,7 +105,6 @@ h2 {
   margin-top: 1.5rem;
 }
 
-/* Card Container */
 .component-card {
   background: white;
   border-radius: 12px;
@@ -117,6 +116,15 @@ h2 {
 
 .component-card:hover {
   box-shadow: 0 4px 12px rgba(12, 15, 61, 0.12);
+}
+
+.component-card > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .component-card > div:first-child > button {
@@ -145,15 +153,6 @@ h2 {
   box-shadow: none;
 }
 
-/* Ajuste para o container do título */
-.component-card > div:first-child {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-/* Table Container com Scroll */
 .table-container {
   width: 100%;
   margin-top: 1.5rem;
@@ -181,7 +180,6 @@ h2 {
   background: #94a3b8;
 }
 
-/* Garantir que o cabeçalho fique fixo durante o scroll */
 .table-container thead {
   position: sticky;
   top: 0;
@@ -193,7 +191,6 @@ h2 {
   border-bottom: 2px solid #e1e4f0;
 }
 
-/* Form Styles */
 form {
   display: flex;
   gap: 0.75rem;
@@ -214,6 +211,7 @@ select {
   transition: all 0.2s ease;
   outline: none;
   min-width: 180px;
+  flex: 1 1 auto;
 }
 
 input[type="text"]:focus,
@@ -227,7 +225,6 @@ input::placeholder {
   color: #9ca3b8;
 }
 
-/* Button Styles */
 button {
   padding: 0.625rem 1.5rem;
   border: none;
@@ -237,6 +234,7 @@ button {
   cursor: pointer;
   transition: all 0.2s ease;
   outline: none;
+  white-space: nowrap;
 }
 
 button[type="submit"],
@@ -245,8 +243,8 @@ button:not([type="button"]):not(.delete-btn):not(.edit-btn) {
   color: white;
 }
 
-button[type="submit"]:hover,
-button:not([type="button"]):not(.delete-btn):not(.edit-btn):hover {
+button[type="submit"]:hover:not(:disabled),
+button:not([type="button"]):not(.delete-btn):not(.edit-btn):hover:not(:disabled) {
   background: #2438e6;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(50, 70, 255, 0.25);
@@ -258,38 +256,40 @@ button[type="button"] {
   border: 1.5px solid #e1e4f0;
 }
 
-button[type="button"]:hover {
+button[type="button"]:hover:not(:disabled) {
   background: #f8f9fc;
   border-color: #3246FF;
   color: #3246FF;
 }
 
-/* Edit Button */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .edit-btn {
   background: white;
   color: #3246FF;
   border: 1.5px solid #3246FF;
 }
 
-.edit-btn:hover {
+.edit-btn:hover:not(:disabled) {
   background: #3246FF;
   color: white;
 }
 
-/* Delete Button */
 .delete-btn {
   background: white;
   color: #ef4444;
   border: 1.5px solid #fecaca;
 }
 
-.delete-btn:hover {
+.delete-btn:hover:not(:disabled) {
   background: #fef2f2;
   border-color: #ef4444;
   transform: translateY(-1px);
 }
 
-/* Table Styles */
 table {
   width: 100%;
   border-collapse: separate;
@@ -341,7 +341,10 @@ td button {
   margin-right: 0.5rem;
 }
 
-/* List Styles */
+td button:last-child {
+  margin-right: 0;
+}
+
 ul {
   list-style: none;
   margin-top: 1.5rem;
@@ -357,6 +360,7 @@ li {
   justify-content: space-between;
   align-items: center;
   transition: all 0.2s ease;
+  gap: 1rem;
 }
 
 li:hover {
@@ -370,7 +374,10 @@ li button {
   margin-left: 0.5rem;
 }
 
-/* Loading & Error States */
+li button:first-child {
+  margin-left: 0;
+}
+
 p {
   margin: 1rem 0;
   font-size: 0.9375rem;
@@ -388,7 +395,6 @@ p.error {
   border: 1px solid #fecaca;
 }
 
-/* Total Value Highlight */
 .total-value {
   background: linear-gradient(135deg, #3246FF 0%, #0C0F3D 100%);
   color: white;
@@ -404,25 +410,109 @@ p.error {
   font-size: 1.75rem;
 }
 
-/* Actions Container */
 .actions {
   display: flex;
   gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
-/* Responsive Design */
+@media (max-width: 1024px) {
+  .App {
+    padding: 1.5rem;
+  }
+
+  .header-container {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .component-card {
+    padding: 1.75rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+}
+
 @media (max-width: 768px) {
   .App {
     padding: 1rem;
   }
 
+  .header-container {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .header-logo {
+    padding-right: 0;
+    border-right: none;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    padding-bottom: 1rem;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .logo-image {
+    height: 45px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    text-align: center;
+  }
+
+  .header-title h1 {
+    font-size: 1.375rem;
+  }
+
+  .header-subtitle {
+    font-size: 0.8125rem;
+  }
+
+  .header-badge {
+    padding: 0.375rem 0.875rem;
+    font-size: 0.75rem;
+  }
+
   .component-card {
     padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .component-card > div:first-child {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .component-card > div:first-child > h1 {
+    margin-bottom: 0;
+  }
+
+  .component-card > div:first-child > button {
+    width: 100%;
+  }
+
+  h1 {
+    font-size: 1.375rem;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    font-size: 1.125rem;
   }
 
   form {
     flex-direction: column;
-    align-items: stretch;
+    gap: 0.75rem;
   }
 
   input[type="text"],
@@ -439,12 +529,31 @@ p.error {
 
   th, td {
     padding: 0.75rem 0.5rem;
+    font-size: 0.8125rem;
+  }
+
+  th {
+    font-size: 0.75rem;
+  }
+
+  td button {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .table-container {
+    max-height: 350px !important;
   }
 
   li {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  li > span {
+    width: 100%;
   }
 
   li button {
@@ -455,8 +564,173 @@ p.error {
     width: 100%;
   }
 
-  .table-container {
-    max-height: 350px !important;
+  .total-value {
+    padding: 1.25rem;
   }
 
+  .total-value h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .App {
+    padding: 0.75rem;
+  }
+
+  .header-container {
+    padding: 0.875rem;
+  }
+
+  .logo-image {
+    height: 40px;
+  }
+
+  .header-title h1 {
+    font-size: 1.25rem;
+  }
+
+  .header-subtitle {
+    font-size: 0.75rem;
+  }
+
+  .component-card {
+    padding: 1.25rem;
+    border-radius: 10px;
+  }
+
+  h1 {
+    font-size: 1.25rem;
+  }
+
+  h2 {
+    font-size: 1rem;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  select {
+    padding: 0.5rem 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  th, td {
+    padding: 0.625rem 0.375rem;
+    font-size: 0.75rem;
+  }
+
+  th {
+    font-size: 0.6875rem;
+  }
+
+  td button {
+    padding: 0.375rem 0.625rem;
+    font-size: 0.75rem;
+  }
+
+  .table-container {
+    max-height: 300px !important;
+  }
+
+  li {
+    padding: 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  .total-value {
+    padding: 1rem;
+  }
+
+  .total-value h2 {
+    font-size: 1.25rem;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 320px) {
+  .App {
+    padding: 0.5rem;
+  }
+
+  .header-title h1 {
+    font-size: 1.125rem;
+  }
+
+  .component-card {
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 1.125rem;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  select,
+  button {
+    font-size: 0.8125rem;
+    padding: 0.5rem;
+  }
+
+  th, td {
+    padding: 0.5rem 0.25rem;
+    font-size: 0.6875rem;
+  }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .header-container {
+    padding: 0.75rem 1rem;
+  }
+
+  .logo-image {
+    height: 35px;
+  }
+
+  .header-title h1 {
+    font-size: 1.125rem;
+  }
+
+  .component-card {
+    padding: 1rem;
+  }
+
+  .table-container {
+    max-height: 250px !important;
+  }
+}
+
+@media print {
+  .app-header {
+    box-shadow: none;
+    border-bottom: 2px solid #0C0F3D;
+  }
+
+  .component-card {
+    box-shadow: none;
+    border: 1px solid #e1e4f0;
+    page-break-inside: avoid;
+  }
+
+  button {
+    display: none;
+  }
+
+  .table-container {
+    max-height: none !important;
+    overflow: visible !important;
+    border: none !important;
+  }
 }
