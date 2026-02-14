@@ -2,6 +2,8 @@
 
 Sistema de gerenciamento de inventário desenvolvido em React + TypeScript + Vite, com testes unitários e E2E.
 
+Link: [https://inventory-projedata.vercel.app](https://inventory-projedata.vercel.app)
+
 ## 🚀 Tecnologias
 
 - **React** 19.2.0
@@ -16,7 +18,7 @@ Sistema de gerenciamento de inventário desenvolvido em React + TypeScript + Vit
 
 - Node.js (versão 16 ou superior)
 - npm ou yarn
-- Backend da API rodando em `http://localhost:8080`
+- Backend da API rodando em `http://localhost:8080` e em Produção `https://inventory-api-projedata.up.railway.app`
 
 ## 🔧 Instalação
 
@@ -45,7 +47,7 @@ Inicie o servidor de desenvolvimento:
 npm run dev
 ```
 
-O aplicativo estará disponível em: `http://localhost:5173`
+O aplicativo estará disponível em: `http://localhost:5173` e em Produção `https://inventory-projedata.vercel.app/`
 
 ### Build de Produção
 
@@ -137,7 +139,7 @@ Certifique-se de que o backend está rodando antes de iniciar o frontend.
 
 ## ✅ Checklist de Desenvolvimento
 
-- [ ] Backend rodando em `localhost:8080`
+- [ ] Backend rodando em `localhost:8080` e `https://inventory-api-projedata.up.railway.app`
 - [ ] Dependências instaladas (`npm install`)
 - [ ] Servidor de desenvolvimento iniciado (`npm run dev`)
 - [ ] Testes unitários passando (`npm run test`)
