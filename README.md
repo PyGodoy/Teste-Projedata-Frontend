@@ -18,7 +18,8 @@ Link: [https://inventory-projedata.vercel.app](https://inventory-projedata.verce
 
 - Node.js (versão 16 ou superior)
 - npm ou yarn
-- Backend da API rodando em `http://localhost:8080` e em Produção `https://inventory-api-projedata.up.railway.app`
+- ⚠️ **MUITO IMPORTANTE:** Configurar o .env
+- Backend da API rodando em `http://localhost:8080` e/ou em Produção `https://inventory-api-projedata.up.railway.app`
 
 ## 🔧 Instalação
 
@@ -41,6 +42,13 @@ npm install --save-dev cypress
 ## 🏃 Executando o Projeto
 
 ### Modo de Desenvolvimento
+
+Crie a .env e defina a variavel VITE_API_URL:
+```bash
+VITE_API_URL: localhost:8080
+ou
+VITE_API_URL=https://inventory-api-projedata.up.railway.app
+```
 
 Inicie o servidor de desenvolvimento:
 ```bash
