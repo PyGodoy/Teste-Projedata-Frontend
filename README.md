@@ -43,6 +43,13 @@ npm install --save-dev cypress
 
 ### Modo de Desenvolvimento
 
+Crie a .env e defina a variavel VITE_API_URL:
+```bash
+VITE_API_URL: localhost:8080
+ou
+VITE_API_URL=https://inventory-api-projedata.up.railway.app
+```
+
 Inicie o servidor de desenvolvimento:
 ```bash
 npm run dev
