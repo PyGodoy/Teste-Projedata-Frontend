@@ -299,6 +299,7 @@ table {
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 1px 3px rgba(12, 15, 61, 0.05);
+  table-layout: fixed;
 }
 
 thead {
@@ -306,21 +307,71 @@ thead {
 }
 
 th {
-  padding: 1rem;
-  text-align: left;
+  padding: 1rem 0.75rem;
+  text-align: center;
   font-weight: 600;
   font-size: 0.875rem;
   color: #0C0F3D;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   border-bottom: 2px solid #e1e4f0;
+  vertical-align: middle;
+}
+
+/* Default widths for 5-column tables (Products) */
+th:nth-child(1) {
+  width: 10%;
+}
+
+th:nth-child(2) {
+  width: 25%;
+}
+
+th:nth-child(3) {
+  width: 20%;
+}
+
+th:nth-child(4) {
+  width: 20%;
+}
+
+th:nth-child(5) {
+  width: 25%;
+}
+
+/* Specific widths for 4-column tables */
+table thead tr th:first-child:nth-last-child(4),
+table thead tr th:first-child:nth-last-child(4) ~ th {
+  width: 25%;
+}
+
+/* Specific widths for 3-column tables (Production) */
+table thead tr th:first-child:nth-last-child(3),
+table thead tr th:first-child:nth-last-child(3) ~ th {
+  width: 33.33%;
+}
+
+table thead tr th:first-child:nth-last-child(3):nth-child(1) {
+  width: 33.33%;
+}
+
+table thead tr th:first-child:nth-last-child(3):nth-child(2) {
+  width: 33.33%;
+}
+
+table thead tr th:first-child:nth-last-child(3):nth-child(3) {
+  width: 33.34%;
 }
 
 td {
-  padding: 1rem;
+  padding: 1rem 0.75rem;
   border-bottom: 1px solid #f1f3f9;
   color: #0C0F3D;
   font-size: 0.9375rem;
+  text-align: center;
+  vertical-align: middle;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 tbody tr {
@@ -338,11 +389,8 @@ tbody tr:last-child td {
 td button {
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
-  margin-right: 0.5rem;
-}
-
-td button:last-child {
-  margin-right: 0;
+  margin: 0;
+  min-width: 70px;
 }
 
 ul {
@@ -414,6 +462,9 @@ p.error {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 0 0.25rem;
 }
 
 @media (max-width: 1024px) {
@@ -435,6 +486,39 @@ p.error {
 
   h2 {
     font-size: 1.25rem;
+  }
+
+  /* Default widths for 5-column tables */
+  th:nth-child(1) {
+    width: 10%;
+  }
+
+  th:nth-child(2) {
+    width: 25%;
+  }
+
+  th:nth-child(3) {
+    width: 20%;
+  }
+
+  th:nth-child(4) {
+    width: 20%;
+  }
+
+  th:nth-child(5) {
+    width: 25%;
+  }
+
+  /* Widths for 4-column tables */
+  table thead tr th:first-child:nth-last-child(4),
+  table thead tr th:first-child:nth-last-child(4) ~ th {
+    width: 25%;
+  }
+
+  /* Widths for 3-column tables */
+  table thead tr th:first-child:nth-last-child(3),
+  table thead tr th:first-child:nth-last-child(3) ~ th {
+    width: 33.33%;
   }
 }
 
@@ -525,20 +609,56 @@ p.error {
 
   table {
     font-size: 0.875rem;
+    table-layout: auto;
   }
 
   th, td {
-    padding: 0.75rem 0.5rem;
+    padding: 0.875rem 0.5rem;
     font-size: 0.8125rem;
   }
 
   th {
     font-size: 0.75rem;
+    padding: 1rem 0.5rem;
+  }
+
+  /* Default widths for 5-column tables */
+  th:nth-child(1) {
+    width: 12%;
+  }
+
+  th:nth-child(2) {
+    width: 22%;
+  }
+
+  th:nth-child(3) {
+    width: 18%;
+  }
+
+  th:nth-child(4) {
+    width: 18%;
+  }
+
+  th:nth-child(5) {
+    width: 30%;
+  }
+
+  /* Widths for 4-column tables */
+  table thead tr th:first-child:nth-last-child(4),
+  table thead tr th:first-child:nth-last-child(4) ~ th {
+    width: 25%;
+  }
+
+  /* Widths for 3-column tables */
+  table thead tr th:first-child:nth-last-child(3),
+  table thead tr th:first-child:nth-last-child(3) ~ th {
+    width: 33.33%;
   }
 
   td button {
     padding: 0.375rem 0.75rem;
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
+    margin: 0 0.125rem;
   }
 
   .table-container {
@@ -562,6 +682,13 @@ p.error {
 
   .actions {
     width: 100%;
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .actions button {
+    flex: 1;
+    min-width: 0;
   }
 
   .total-value {
@@ -620,17 +747,52 @@ p.error {
   }
 
   th, td {
-    padding: 0.625rem 0.375rem;
+    padding: 0.75rem 0.375rem;
     font-size: 0.75rem;
   }
 
   th {
     font-size: 0.6875rem;
+    padding: 0.875rem 0.375rem;
+  }
+
+  /* Default widths for 5-column tables */
+  th:nth-child(1) {
+    width: 10%;
+  }
+
+  th:nth-child(2) {
+    width: 25%;
+  }
+
+  th:nth-child(3) {
+    width: 18%;
+  }
+
+  th:nth-child(4) {
+    width: 17%;
+  }
+
+  th:nth-child(5) {
+    width: 30%;
+  }
+
+  /* Widths for 4-column tables */
+  table thead tr th:first-child:nth-last-child(4),
+  table thead tr th:first-child:nth-last-child(4) ~ th {
+    width: 25%;
+  }
+
+  /* Widths for 3-column tables */
+  table thead tr th:first-child:nth-last-child(3),
+  table thead tr th:first-child:nth-last-child(3) ~ th {
+    width: 33.33%;
   }
 
   td button {
-    padding: 0.375rem 0.625rem;
-    font-size: 0.75rem;
+    padding: 0.375rem 0.5rem;
+    font-size: 0.6875rem;
+    margin: 0 0.125rem;
   }
 
   .table-container {
@@ -652,6 +814,7 @@ p.error {
 
   .actions {
     flex-direction: column;
+    gap: 0.375rem;
   }
 
   .actions button {
@@ -685,8 +848,17 @@ p.error {
   }
 
   th, td {
-    padding: 0.5rem 0.25rem;
+    padding: 0.625rem 0.25rem;
     font-size: 0.6875rem;
+  }
+
+  th {
+    padding: 0.75rem 0.25rem;
+  }
+
+  td button {
+    padding: 0.3rem 0.4rem;
+    font-size: 0.625rem;
   }
 }
 

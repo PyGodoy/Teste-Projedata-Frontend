@@ -251,52 +251,80 @@ function ProductRawMaterials() {
         data-cy="associations-list-container"
         style={{
           maxHeight: associations.length >= 3 ? '400px' : 'none',
-          overflowY: associations.length >= 3 ? 'auto' : 'visible',
+          height: associations.length >= 3 ? '400px' : 'auto',
+          overflowY: associations.length >= 3 ? 'scroll' : 'visible',
           border: associations.length >= 3 ? '1px solid #e1e4f0' : 'none',
           borderRadius: '8px',
-          padding: associations.length >= 3 ? '0.5rem' : '0',
-          marginTop: '1rem'
+          marginBottom: '1.5rem'
         }}
       >
-        <ul style={{ 
-          margin: 0,
-          padding: 0,
-          listStyle: 'none'
-        }}
-        data-cy="associations-list"
+        <table 
+          style={{ 
+            margin: 0,
+            width: '100%'
+          }}
+          data-cy="associations-list"
+          role="list"
         >
-          {associations.length === 0 && !loading && !refreshing ? (
-            <li style={{ justifyContent: 'center' }} data-cy="empty-state">No associations found. Create one above.</li>
-          ) : (
-            associations.map((a) => (
-              <li key={a.id} data-cy="association-row">
-                <span data-cy="association-details">
-                  <strong>Product:</strong> <span data-cy="association-product-name">{a.product.name}</span> |{' '}
-                  <strong>Material:</strong> <span data-cy="association-material-name">{a.rawMaterial.name}</span> |{' '}
-                  <strong>Quantity:</strong> <span data-cy="association-quantity">{a.quantityRequired}</span>
-                </span>
-                <div className="actions">
-                  <button 
-                    className="edit-btn" 
-                    onClick={() => handleEdit(a)}
-                    disabled={loading}
-                    data-cy="edit-association-btn"
-                  >
-                    Edit
-                  </button>
-                  <button 
-                    className="delete-btn" 
-                    onClick={() => handleDelete(a.id)}
-                    disabled={loading}
-                    data-cy="delete-association-btn"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))
-          )}
-        </ul>
+          <thead style={associations.length >= 3 ? { 
+            position: 'sticky', 
+            top: 0, 
+            background: '#f8f9fc', 
+            zIndex: 1,
+            boxShadow: '0 1px 0 #e1e4f0'
+          } : {}}>
+            <tr>
+              <th>Product - Raw Material</th>
+              <th>Quantity Required</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {associations.length === 0 && !loading && !refreshing ? (
+              <tr data-cy="empty-state" role="listitem">
+                <td colSpan={3} style={{ textAlign: 'center', color: '#64748b', fontStyle: 'italic' }}>
+                  No associations found. Create one above.
+                </td>
+              </tr>
+            ) : (
+              associations.map((a) => (
+                <tr key={a.id} data-cy="association-row" role="listitem">
+                  <td data-cy="association-details">
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                      <span>
+                        <strong>Product:</strong> <span data-cy="association-product-name">{a.product.name}</span>
+                      </span>
+                      <span>
+                        <strong>Material:</strong> <span data-cy="association-material-name">{a.rawMaterial.name}</span>
+                      </span>
+                    </div>
+                  </td>
+                  <td data-cy="association-quantity">{a.quantityRequired}</td>
+                  <td>
+                    <div className="actions">
+                      <button 
+                        className="edit-btn" 
+                        onClick={() => handleEdit(a)}
+                        disabled={loading}
+                        data-cy="edit-association-btn"
+                      >
+                        Edit
+                      </button>
+                      <button 
+                        className="delete-btn" 
+                        onClick={() => handleDelete(a.id)}
+                        disabled={loading}
+                        data-cy="delete-association-btn"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );
