@@ -204,17 +204,6 @@ function Products() {
           </tbody>
         </table>
       </div>
-
-      {products.length >= 3 && (
-        <p style={{ 
-          marginTop: '0.75rem', 
-          fontSize: '0.875rem', 
-          color: '#64748b',
-          textAlign: 'right'
-        }}>
-          Showing {products.length} products (scroll enabled)
-        </p>
-      )}
     </div>
   );
 }

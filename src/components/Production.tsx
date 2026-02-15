@@ -68,7 +68,6 @@ function Production() {
             data-cy="production-table-container"
             style={{
               maxHeight: products.length >= 3 ? '300px' : 'none',
-              height: products.length >= 3 ? '300px' : 'auto',
               overflowY: products.length >= 3 ? 'scroll' : 'visible',
               border: products.length >= 3 ? '1px solid #e1e4f0' : 'none',
               borderRadius: '8px',

@@ -302,6 +302,11 @@ table {
   table-layout: fixed;
 }
 
+/* Remove margin when table is inside table-container */
+.table-container table {
+  margin-top: 0;
+}
+
 thead {
   background: #f8f9fc;
 }

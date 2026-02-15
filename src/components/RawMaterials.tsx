@@ -181,17 +181,6 @@ function RawMaterials() {
           </tbody>
         </table>
       </div>
-
-      {materials.length >= 3 && (
-        <p style={{ 
-          marginTop: '0.75rem', 
-          fontSize: '0.875rem', 
-          color: '#64748b',
-          textAlign: 'right'
-        }}>
-          Showing {materials.length} raw materials (scroll enabled)
-        </p>
-      )}
     </div>
   );
 }
